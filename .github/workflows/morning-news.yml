@@ -1,1 +1,42 @@
 
+name: Columbus Morning News
+
+on:
+  schedule:
+    # Run at 7:00 AM EST/EDT every day (12:00 PM UTC)
+    - cron: '0 12 * * *'
+  
+  # Allow manual triggering for testing
+  workflow_dispatch:
+
+jobs:
+  send-morning-summary:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install requests beautifulsoup4 lxml resend
+    
+    - name: Run Columbus Morning Summary
+      env:
+        DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+        RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+        FROM_EMAIL: ${{ secrets.FROM_EMAIL }}
+        TO_EMAIL: ${{ secrets.TO_EMAIL }}
+      run: |
+        python bot.py
+    
+    - name: Log completion
+      if: always()
+      run: |
+        echo "Morning summary job completed at $(date)"
