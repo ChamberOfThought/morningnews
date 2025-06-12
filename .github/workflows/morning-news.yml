@@ -1,10 +1,9 @@
-
 name: Columbus Morning News
 
 on:
   schedule:
-    # Run at 7:00 AM EST/EDT every day (12:00 PM UTC)
-    - cron: '0 12 * * *'
+    # Run at 7:00 AM EDT every day (11:00 AM UTC)
+    - cron: '0 11 * * *'
   
   # Allow manual triggering for testing
   workflow_dispatch:
